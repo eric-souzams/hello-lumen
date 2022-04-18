@@ -13,6 +13,8 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
+$router->get('/todos', 'TodoController@getTodos');
+$router->get('/todos/{todo}', 'TodoController@getTodo');
+$router->post('/todos', 'TodoController@postTodo');
+$router->post('/todos/{todo}/status/{status}', 'TodoController@postTodoStatus');
+$router->delete('/todos/{todo}', 'TodoController@deleteTodo');
