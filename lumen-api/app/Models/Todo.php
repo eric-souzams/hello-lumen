@@ -19,6 +19,10 @@ class Todo extends Model
         'done_at'
     ];
 
+    protected $casts = [
+        'done' => 'boolean'
+    ];
+
     public function done(): void
     {
         $this->update([
