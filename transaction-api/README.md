@@ -2,6 +2,7 @@
 
 ## Setup do projeto
 - Lumen Framework
+- Lumen Passport
 
 ## Objetivo
 Temos 2 tipos de usuários, os comuns e lojistas, ambos têm carteira com dinheiro e realizam transferências entre eles. Vamos nos atentar **somente** ao fluxo de transferência entre dois usuários.
@@ -31,18 +32,22 @@ POST /transaction
 }
 ```
 
-## Materiais úteis
-- https://hub.packtpub.com/why-we-need-design-patterns/
-- http://br.phptherightway.com/
-- https://girorme.github.io/2019/09/04/psr-12-pt-br/
-- https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing
-- https://github.com/exakat/php-static-analysis-tools
-- https://martinfowler.com/articles/microservices.htm
+## Database Model
+```sql
+    table: users
+        id -> uuid
+        name -> string
+        email -> string
+        document_id -> string
+        password -> string
 
-## License
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-<br />
+    table: retailers
+        id -> uuid
+        name -> string
+        email -> string
+        document_id -> string
+        password -> string
+```
 
 ## Auth
 [ ] Autenticação
@@ -55,3 +60,17 @@ The Lumen framework is open-sourced software licensed under the [MIT license](ht
 [ ] Criar transferencia de uma conta para outra
 
 [ ] Coverage
+
+
+<br />
+
+## Materiais úteis
+- https://hub.packtpub.com/why-we-need-design-patterns/
+- http://br.phptherightway.com/
+- https://girorme.github.io/2019/09/04/psr-12-pt-br/
+- https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing
+- https://github.com/exakat/php-static-analysis-tools
+- https://martinfowler.com/articles/microservices.htm
+
+## License
+The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
