@@ -2,6 +2,8 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Models\User;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -14,3 +16,8 @@
 */
 
 $router->post('/auth/{provider}', ['as' => 'authenticate', 'uses' => 'AuthController@postAuthenticate']);
+
+
+$router->get('/', function() {
+    User::factory()->create(['email' => 'eric@github.com']);
+});

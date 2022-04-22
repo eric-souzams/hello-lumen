@@ -22,7 +22,7 @@ class AuthControllerTest extends \TestCase
 
         // Assert
         $response->assertResponseStatus(422);
-        $response->seeJson(['erros' => ['main' => 'Wrong provider provided']]);
+        $response->seeJson(['errors' => ['main' => 'Wrong provider provided']]);
     }
 
     public function testUserShouldBeDeniedIfNotRegistered()
@@ -38,7 +38,7 @@ class AuthControllerTest extends \TestCase
 
         // Assert
         $response->assertResponseStatus(401);
-        $response->seeJson(['erros' => ['main' => 'Wrong credentials']]);
+        $response->seeJson(['errors' => ['main' => 'Wrong credentials']]);
     }
 
     public function testUserShouldSendWrongPassword()
@@ -56,6 +56,26 @@ class AuthControllerTest extends \TestCase
 
         // Assert
         $response->assertResponseStatus(401);
-        $response->seeJson(['erros' => ['main' => 'Wrong credentials']]);
+        $response->seeJson(['errors' => ['main' => 'Wrong credentials']]);
+    }
+
+    public function testUserCanAuthenticate()
+    {
+        // Prepare
+        $this->artisan('passport:install');
+
+        $user = User::factory()->create(); 
+
+        $payload = [
+            'email' => $user->email,
+            'password' => 'senha@123'
+        ];
+
+        // Act
+        $response = $this->post(route('authenticate', ['provider' => 'user']), $payload);
+
+        // Assert
+        $response->assertResponseStatus(200);
+        $response->seeJsonStructure(['access_token', 'expires_at', 'provider']);
     }
 }
