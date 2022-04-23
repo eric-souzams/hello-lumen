@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\InvalidDataProviderException;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
-class AuthRepository {
+class AuthRepository 
+{
     public function __construct()
     {
         
@@ -18,12 +19,6 @@ class AuthRepository {
 
     public function authenticate(string $provider, array $fields): array
     {
-        $providers = ['user', 'retailer'];
-
-        if (!in_array($provider, $providers)) {
-            throw new InvalidDataProviderException('Wrong provider provided');
-        }
-
         $selectedProvider = $this->getProvider($provider);
 
         $model = $selectedProvider->where('email', $fields['email'])->first();
@@ -52,7 +47,7 @@ class AuthRepository {
         } elseif ($provider == "retailer") {
             return new Retailer();
         } else {
-            throw new \Exception('Provider not found', 422);
+            throw new InvalidDataProviderException('Wrong provider provided');
         }
     }
 }

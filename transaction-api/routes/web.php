@@ -15,9 +15,13 @@ use App\Models\User;
 |
 */
 
+// new user
+$router->get('/', function() {User::factory()->create(['email' => 'eric@github.com']);});
+
+// authentication
 $router->post('/auth/{provider}', ['as' => 'authenticate', 'uses' => 'AuthController@postAuthenticate']);
 
+// user
+$router->get('/users/me', ['as' => 'usersMe', 'uses' => 'MeController@getMe']);
 
-$router->get('/', function() {
-    User::factory()->create(['email' => 'eric@github.com']);
-});
+$router->post('/transactions', ['as' => 'postTransaction', 'uses' => 'Transactions\TransactionsController@postTransaction']);
