@@ -34,7 +34,7 @@ class AuthControllerTest extends \TestCase
         ];
 
         // Act
-        $response = $this->post(route('authenticate', ['provider' => 'user']), $payload);
+        $response = $this->post(route('authenticate', ['provider' => 'users']), $payload);
 
         // Assert
         $response->assertResponseStatus(401);
@@ -52,7 +52,7 @@ class AuthControllerTest extends \TestCase
         ];
 
         // Act
-        $response = $this->post(route('authenticate', ['provider' => 'user']), $payload);
+        $response = $this->post(route('authenticate', ['provider' => 'users']), $payload);
 
         // Assert
         $response->assertResponseStatus(401);
@@ -72,7 +72,7 @@ class AuthControllerTest extends \TestCase
         ];
 
         // Act
-        $response = $this->post(route('authenticate', ['provider' => 'user']), $payload);
+        $response = $this->post(route('authenticate', ['provider' => 'users']), $payload);
 
         // Assert
         $response->assertResponseStatus(200);

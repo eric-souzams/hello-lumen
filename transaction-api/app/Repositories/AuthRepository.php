@@ -42,9 +42,9 @@ class AuthRepository
 
     public function getProvider(string $provider): AuthenticatableContract
     {
-        if ($provider == "user") {
+        if ($provider == "users") {
             return new User();
-        } elseif ($provider == "retailer") {
+        } elseif ($provider == "retailers") {
             return new Retailer();
         } else {
             throw new InvalidDataProviderException('Wrong provider provided');

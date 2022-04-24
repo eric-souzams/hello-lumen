@@ -39,7 +39,7 @@ class TransactionsControllerTest extends \TestCase
         $user = User::factory()->create();
 
         $payload = [
-            'provider' => 'user',
+            'provider' => 'users',
             'payee_id' => 'fake_id',
             'amount'   =>  30
         ];
@@ -56,7 +56,7 @@ class TransactionsControllerTest extends \TestCase
         $user = User::factory()->create();
 
         $payload = [
-            'provider' => 'user',
+            'provider' => 'users',
             'payee_id' => 'fake_id',
             'amount'   =>  30
         ];
@@ -73,7 +73,7 @@ class TransactionsControllerTest extends \TestCase
         $user = Retailer::factory()->create();
         
         $payload = [
-            'provider' => 'user',
+            'provider' => 'users',
             'payee_id' => 'fake_id',
             'amount'   =>  30
         ];
@@ -91,7 +91,7 @@ class TransactionsControllerTest extends \TestCase
         $userPayed = User::factory()->create();
 
         $payload = [
-            'provider' => 'user',
+            'provider' => 'users',
             'payee_id' => $userPayed->id,
             'amount'   =>  30
         ];
@@ -99,5 +99,35 @@ class TransactionsControllerTest extends \TestCase
         $response = $this->actingAs($userPayer, 'users')->post(route('postTransaction'), $payload);
 
         $response->assertResponseStatus(422);
+    }
+
+    public function testUserCanTransferMoney()
+    {
+        $this->artisan('passport:install');
+
+        $userPayer = User::factory()->create();
+        $userPayer->wallet->deposit(1000);
+
+        $userPayed = User::factory()->create();
+
+        $payload = [
+            'provider' => 'users',
+            'payee_id' => $userPayed->id,
+            'amount'   =>  100
+        ];
+
+        $response = $this->actingAs($userPayer, 'users')->post(route('postTransaction'), $payload);
+
+        $response->assertResponseStatus(200);
+        
+        $response->seeInDatabase('wallets', [
+            'id' => $userPayer->wallet->id,
+            'balance' => 900
+        ]);
+
+        $response->seeInDatabase('wallets', [
+            'id' => $userPayed->wallet->id,
+            'balance' => 100
+        ]);
     }
 }
