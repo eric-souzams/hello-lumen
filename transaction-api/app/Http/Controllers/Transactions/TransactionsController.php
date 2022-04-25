@@ -8,6 +8,7 @@ use App\Exceptions\TransactionDeniedException;
 use App\Http\Controllers\Controller;
 use App\Repositories\Transaction\TransactionRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use PHPUnit\Framework\InvalidDataProviderException;
 
 class TransactionsController extends Controller
@@ -38,6 +39,10 @@ class TransactionsController extends Controller
             return response()->json(['errors' => ['main' => $exception->getMessage()]], 422);
         } catch (TransactionDeniedException | IdleServiceException $exception) {
             return response()->json(['errors' => ['main' => $exception->getMessage()]], 401);
+        } catch (\Exception $exception) {
+            Log::critical('[Transaction Gone Wrong]', [
+                'message' => $exception->getMessage()
+            ]);
         }
     }
      
