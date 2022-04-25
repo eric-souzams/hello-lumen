@@ -2,11 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Events\ExampleEvent;
+use App\Events\SendNotificationEvent;
+use App\Services\MockyService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class ExampleListener
+class NotificationListener
 {
     /**
      * Create the event listener.
@@ -21,11 +22,11 @@ class ExampleListener
     /**
      * Handle the event.
      *
-     * @param  \App\Events\ExampleEvent  $event
+     * @param  \App\Events\SendNotificationEvent  $event
      * @return void
      */
-    public function handle(ExampleEvent $event)
+    public function handle(SendNotificationEvent $event)
     {
-        //
+        app(MockyService::class)->notifyUser($event->transaction->wallet->user->id);
     }
 }

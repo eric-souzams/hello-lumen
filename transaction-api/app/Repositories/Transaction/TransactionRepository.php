@@ -2,12 +2,15 @@
 
 namespace App\Repositories\Transaction;
 
+use App\Events\SendNotificationEvent;
+use App\Exceptions\IdleServiceException;
 use App\Exceptions\NotEnoughBalanceException;
 use App\Exceptions\TransactionDeniedException;
 use App\Models\Retailer;
 use App\Models\Transaction\Transaction;
 use App\Models\Transaction\Wallet;
 use App\Models\User;
+use App\Services\MockyService;
 use PHPUnit\Framework\InvalidDataProviderException;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Support\Facades\Auth;
@@ -23,13 +26,17 @@ class TransactionRepository
         }
 
         if (!$payee = $this->retrievePayer($data)) {
-            throw new InvalidDataProviderException('empty');
+            throw new InvalidDataProviderException('User not found', 404);
         }
         
         $myWallet = Auth::guard($data['provider'])->user()->wallet;
         
         if (!$this->checkUserBalance($myWallet, $data['amount'])) {
             throw new NotEnoughBalanceException('You do not have enough balance', 422);
+        }
+
+        if (!$this->isServiceAbleToMakeTransaction()) {
+            throw new IdleServiceException('Service is not responding. Try again later.');
         }
 
         return $this->makeTransaction($payee, $data);
@@ -53,11 +60,11 @@ class TransactionRepository
         } elseif ($provider == "retailers") {
             return new Retailer();
         } else {
-            throw new InvalidDataProviderException('Wrong provider provided');
+            throw new InvalidDataProviderException('Wrong provider provided', 422);
         }
     }
 
-    private function checkUserBalance(Wallet $wallet, $amount)
+    private function checkUserBalance(Wallet $wallet, $amount): bool
     {
         return $wallet->balance >= $amount;
     }
@@ -85,7 +92,16 @@ class TransactionRepository
             $transaction->walletPayer->withdraw($payload['amount']);
             $transaction->walletPayee->deposit($payload['amount']);
 
+            event(new SendNotificationEvent($transaction));
+
             return $transaction;
         });
+    }
+
+    private function isServiceAbleToMakeTransaction(): bool
+    {
+        $service = app(MockyService::class)->authorizeTransaction();
+
+        return $service['message'] == 'Autorizado';
     }
 }
