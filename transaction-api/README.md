@@ -47,6 +47,17 @@ POST /transaction
         email -> string
         document_id -> string
         password -> string
+
+    table: wallets
+        id -> uuid
+        user_id -> foreignUuid
+        balance -> decimal
+    
+    table: wallet_transactions
+        id -> uuid
+        payer_wallet_id -> foreignUuid
+        payee_wallet_id -> foreignUuid
+        amount -> decimal
 ```
 
 ## Auth

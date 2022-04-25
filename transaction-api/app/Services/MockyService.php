@@ -32,7 +32,7 @@ class MockyService {
 
     public function notifyUser(string $userId): array
     {
-        return json_decode('{"message": "Não Autorizado"}', true);
+        return json_decode('{"message": "Enviado"}', true);
 
         // $uri = '/v3/b19f7b9f-9cbf-4fc6-ad22-dc30601aec04';
 
